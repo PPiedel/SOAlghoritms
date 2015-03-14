@@ -41,17 +41,19 @@ public class SJFex {
 
 
             if (!queue.isEmpty()) {
-                //pobieram i usuwam pierwszy element kolejki
-                Proces current = queue.remove();
+                //pobieram pierwszy element kolejki ale nie usuwam
+                Proces current = queue.peek();
 
                 //pracuje nad pierwszym elemenetem symulujac zmniejszanie czasu wykonania
                 if (current.getExecutionTime() != 0) {
                     current.setExecutionTime(current.getExecutionTime() - 1);
                 }
 
-                // dla wszyskich procesow czekajacych w kolejce zwiekszam czas oczekiwania
+                // dla wszyskich procesow czekajacych w kolejce oprocz "obecnego" zwiekszam czas oczekiwania
                 for (Proces e : queue) {
-                    e.setWaitingTime(e.getWaitingTime() + 1);
+                    if (!e.equals(current)){
+                        e.setWaitingTime(e.getWaitingTime() + 1);
+                    }
                 }
 
                 /*jesli obecny proces nie zostal wykonany -> przywracam go na pierwsze miejsce w kolejce*/
@@ -59,7 +61,7 @@ public class SJFex {
                     queue.addFirst(current);
                 }
                 else if (current.getExecutionTime()==0){
-                    processList.add(current);
+                    processList.add(queue.remove());
                 }
             }
         }
